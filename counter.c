@@ -93,6 +93,9 @@ int createHashtag(ptr *h,char hashtag[]){
     ptr curr = *h;
     int len = strlen(hashtag);
 
+    if(hashtag[0]=='@' || hashtag[0]==0)
+        return 0;
+    
     if (hashtag[len-1]=='\n')
         hashtag[len-1]=0;
 
