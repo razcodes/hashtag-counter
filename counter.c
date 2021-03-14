@@ -7,7 +7,7 @@
 typedef struct hashtagNode * ptr;
 
 typedef struct hashtagNode{
-    char hashtag[32];
+    char hashtag[256];
     int count;
     ptr next;
 }hashtagNode;
@@ -18,6 +18,7 @@ int createHashtag(ptr*, char[]);
 void printList(ptr, FILE*);
 void bubbleSort(ptr);
 void swap(ptr, ptr);
+void trimWhitespace(char*);
 
 int main(){
     FILE* output;
@@ -25,18 +26,21 @@ int main(){
     char line[1000];
     int count=0;
     ptr h=NULL;
-    const char s[2]=" ";
+    const char s[2]="#";
     char* token;
 
-    input = fopen("input.txt","r+");
-    output = fopen("top_hashtags.txt","w+");
+    input = fopen("input.txt","r");
+    output = fopen("top_hashtags.txt","w");
 
     while(fgets(line,1000,input)!=NULL){
         ptr temp = NULL;
 
         token = strtok(line, s);
 
+
         while(token != NULL){
+
+            trimWhitespace(token);
 
             if(temp = getHashtagNode(&h,token)){
                 temp->count++;
@@ -53,8 +57,8 @@ int main(){
     bubbleSort(h);
     printList(h, output);
 
-    fclose(input);
-    fclose(output);
+/*     fclose(output);
+    fclose(input); */
 
     return 0;
 }
@@ -89,7 +93,7 @@ ptr getHashtagNode(ptr* h,char hashtag[]){
 }
 
 int createHashtag(ptr *h,char hashtag[]){
-    ptr temp = (ptr)malloc(sizeof(hashtagNode));
+    ptr temp = malloc(sizeof(hashtagNode));
     ptr curr = *h;
     int len = strlen(hashtag);
 
@@ -171,3 +175,13 @@ void swap(ptr a, ptr b)
     b->count = temp->count;
     strcpy(b->hashtag,temp->hashtag); 
 } 
+
+void trimWhitespace(char* str)
+{
+  char *end;
+
+  end = str + (strlen(str) - 1);
+  while(end > str && isspace(*end)) end--;
+
+  end[1] = '\0';
+}
